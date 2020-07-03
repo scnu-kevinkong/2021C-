@@ -15,7 +15,7 @@ protected:
   void reSize(int); //改变data数组空间大小.
 public:
   SeqList(int); //构造函数.
-  SeqList(SeqList<T> &L); //复制构造函数.
+  SeqList(SeqList<T> *L); //复制构造函数.
   ~SeqList() { delete[] data; } //析构函数.
   int Size() { return maxSize; } //返回计算表最大容纳个数.
   int Length() { return last + 1; } //返回当前长度.
@@ -46,8 +46,11 @@ public:
   bool Remove(int, T&); //删除第i个，并返回给x.
   bool IsEmpty() { return last == -1 ? true : false; } //判断是否为空.
   bool IsFull() { return last == maxSize - 1 ? true : false; } //判断表是否满.
+  void clearAll() { delete[] data; }
   void input(); //输入.
   void output(); //输出.
+  void union_seq(SeqList<T>*, SeqList<T>* &); //合并.
+  void Intersection(SeqList<T>*, SeqList<T>* &); //交集
 };
 
 // 构造函数，通过指定参数sz定义表的长度.
@@ -66,9 +69,9 @@ SeqList<T>::SeqList(int sz) {
 
 // 复制构造函数，用参数表给出的顺序表初始化新建的顺序表.
 template<class T>
-SeqList<T>::SeqList(SeqList<T> &L) {
-  maxSize = L.Size();
-  last = L.Length() - 1;
+SeqList<T>::SeqList(SeqList<T> *L) {
+  maxSize = L->Size();
+  last = L->Length() - 1;
   T value;
   data = new T[maxSize];
   if (data == NULL) {
@@ -76,7 +79,7 @@ SeqList<T>::SeqList(SeqList<T> &L) {
     exit(1);
   }
   for (int i = 0; i <= last; i++) {
-    if (L.getData(i, value)) {
+    if (L->getData(i, value)) {
       data[i] = value;
     }
     else {
@@ -121,7 +124,7 @@ bool SeqList<T>::Insert(int i, T x) {
   last++;
   return true;
 }
-
+// 查找值的位置
 template<class T>
 int SeqList<T>::Search(T x) {
   int index = -1;
@@ -180,6 +183,33 @@ template<class T>
 void SeqList<T>::output() {
   for (int i = 0; i <= last; i++) {
     cout <<data[i]<<endl;
+  }
+}
+// 合并两个顺序表.
+template<class T>
+void SeqList<T>::union_seq(SeqList<T> *LA,SeqList<T> * &LB) {
+  int n = LA->Length();
+  LB->clearAll();
+  LB = new SeqList<T>(LA);
+  if (last == -1) return;
+  LB->reSize(n + last + 1);
+  for (int i = 0; i <= last; i++) {
+    if (LB->Search(data[i]) == -1) {
+      LB->Push(data[i]);
+    }
+  }
+}
+// 两个顺序表交集.
+template<class T>
+void SeqList<T>::Intersection(SeqList<T>* LA, SeqList<T>* &LB) {
+  int n = LA->Length();
+  LB->clearAll();
+  LB = new SeqList<T>(n + last + 1);
+  if (last == -1) return;
+  for (int i = 0; i <= last; i++) {
+    if (LA->Search(data[i]) != -1) {
+      LB->Push(data[i]);
+    }
   }
 }
 #endif //SEQLIST_H_INCLUDED
