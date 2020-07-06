@@ -49,6 +49,7 @@ public:
   void clearAll() { delete[] data; }
   void input(); //输入.
   void output(); //输出.
+  void cut_length(int); //切除长度.
   void union_seq(SeqList<T>*, SeqList<T>* &); //合并.
   void Intersection(SeqList<T>*, SeqList<T>* &); //交集
 };
@@ -210,6 +211,14 @@ void SeqList<T>::Intersection(SeqList<T>* LA, SeqList<T>* &LB) {
     if (LA->Search(data[i]) != -1) {
       LB->Push(data[i]);
     }
+  }
+}
+
+//切除长度.
+template<class T>
+void SeqList<T>::cut_length(int cut_len) {
+  if (Length() >= cut_len) {
+    last -= cut_len;
   }
 }
 #endif //SEQLIST_H_INCLUDED
