@@ -149,4 +149,48 @@ void combine(SeqList<T> *seq1,SeqList<T> *seq2, SeqList<T> * &seq) {
   }
   return;
 }
+
+// 已知一维数组A[m+n]中依次存放两个线性表a1,a2,a3.....am和b1,b2,b3.....bn,试编写一个函数,将数组中两个顺序表的位置互换,即将(b1,b2,b3...bn)放在(a1,a2...am)前面.
+template<class T>
+void Reverse(SeqList<T> *seq1, SeqList<T> *seq2, SeqList<T> *&seq) {
+  seq1->reverse();
+  seq2->reverse();
+  combine(seq1, seq2, seq);
+  seq->reverse();
+}
+
+//线性表(a1,a2,a3...an)中的元素递增有序且按照顺序存储于计算机内.要求设计一算法,完成用最少时间在表中查找数值为x的元素,若找到则将其与后继元素位置相交换,找不到则将其插入表中并使表中元素依旧有序.
+template<class T>
+void SearchExchangeInsert(SeqList<T> *seq, T x) {
+  int low = 0;
+  int high = seq->Length() - 1;
+  int mid = 0;
+  T temp;
+  while (low <= high) {
+    mid = (low + high) / 2;
+    seq->getData(mid, temp);
+    if (temp == x) break;
+    else if (temp > x) {
+      high = mid - 1;
+    }
+    else {
+      low = mid + 1;
+    }
+  }
+  if (temp == x && mid != seq->Length() - 1) {
+    T exchange = temp;
+    T last_value;
+    seq->getData(mid + 1, last_value);
+    seq->setData(mid, last_value);
+    seq->setData(mid +1, temp);
+  }
+  if (low > high) {
+    seq->extend_len(1);
+    for (int i = seq->Length() - 1; i > high; i--) {
+      seq->getData(i, temp);
+      seq->setData(i + 1, temp);
+    }
+    seq->setData(high + 1, x);
+  }
+}
 #endif //SEQLIST_H_QUESTION

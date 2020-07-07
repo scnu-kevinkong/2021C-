@@ -47,13 +47,29 @@ public:
   bool IsEmpty() { return last == -1 ? true : false; } //判断是否为空.
   bool IsFull() { return last == maxSize - 1 ? true : false; } //判断表是否满.
   void clearAll() { delete[] data; }
+  void extend_len(int len) {
+    if (last + len < maxSize) {
+      last += len;
+    }
+  }
   void input(); //输入.
   void output(); //输出.
   void cut_length(int); //切除长度.
+  void reverse(); //倒叙.
   void union_seq(SeqList<T>*, SeqList<T>* &); //合并.
   void Intersection(SeqList<T>*, SeqList<T>* &); //交集
 };
 
+// 倒叙
+template<class T>
+void SeqList<T>::reverse() {
+  if (last < 0 || last > maxSize - 1) return;
+  for (int i = 0; i <= last/2; i++) {
+    T temp = data[i];
+    data[i] = data[last - i];
+    data[last - i] = temp;
+  }
+}
 // 构造函数，通过指定参数sz定义表的长度.
 template <class T>
 SeqList<T>::SeqList(int sz) {
