@@ -58,6 +58,7 @@ public:
   void reverse(); //倒叙.
   void union_seq(SeqList<T>*, SeqList<T>* &); //合并.
   void Intersection(SeqList<T>*, SeqList<T>* &); //交集
+  void leftMove(int); //左移.
 };
 
 // 倒叙
@@ -237,4 +238,32 @@ void SeqList<T>::cut_length(int cut_len) {
     last -= cut_len;
   }
 }
+//设将n(n>1)个整数存放到一维数组R中,设计一个在时间和空间两方面都尽可能高效的算法，将R中保存的序列循环左移p(0<p<n)个位置,即将R中的数据由(X0,X1,X2...Xn-1)变为(Xp,Xp+1...Xn-1,X0,X1...Xp-1).
+
+// 1.要求给出算法的基本设计思想.
+/*
+*/
+template<class T>
+void SeqList<T>::leftMove(int p) {
+  if (last == -1) {
+    cout << "table is empty" << endl;
+    return;
+  }
+  if (p <= 0 || p > last) {
+    cout << "value p is not right" << endl;
+    return;
+  }
+  T *temp = new T[p];
+  for (int i = 0; i < p; i++) {
+    temp[i] = data[i];
+  }
+  for (int i = p; i <= last; i++) {
+    data[i - p] = data[i];
+  }
+  for (int i = last - p + 1; i <= last;i++) {
+    data[i] = temp[i + p - last - 1];
+  }
+  return;
+}
+
 #endif //SEQLIST_H_INCLUDED

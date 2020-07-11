@@ -193,4 +193,116 @@ void SearchExchangeInsert(SeqList<T> *seq, T x) {
     seq->setData(high + 1, x);
   }
 }
+/*
+ 一个长度为L(L>=1)的升序序列S,处在第[L/2]个位置的数称为S的中位数,例如序列S1=(11,13,15,17,19),则S1的中位数是15,两个序列的中位数是含他们所有元素的升序序列的中位数.
+ 例如,若S2=（2,4,6,8,20),则S1和S2的中位数是11.
+ 现在有两个等长的升序序列A和B,试设计一个在时间和空间两方面都高效的算法.
+*/
+template<class T>
+void get_two_mid(SeqList<T> *seq1, SeqList<T> *seq2, T &x) {
+  T temp1, temp2;
+  int l1, l2, r1, r2, m1, m2;
+  l1 = 0; l2 = 0; r1 = seq1->Length() - 1; r2 = seq2->Length() - 1;
+  while (l1 != r1 || l2 != r2) {
+    m1 = (l1 + r1) / 2; m2 = (l2 + r2) / 2;
+    seq1->getData(m1, temp1);
+    seq2->getData(m2, temp2);
+    if (temp1 == temp2) {
+      cout << temp1 << endl;
+      return;
+    }
+    if (temp1 < temp2) {
+      if ((l1 + r1) % 2 == 0) {
+        l1 = m1;
+        r2 = m2;
+      }
+      else {
+        l1 = m1 + 1;
+        r2 = m2;
+      }
+    }
+    else {
+      if ((l2 + r2) % 2 == 0) {
+        r1 = m1;
+        l2 = m2;
+      }
+      else {
+        r1 = m1;
+        l2 = m2 + 1;
+      }
+    }
+  }
+  seq1->getData(l1, temp1);
+  seq2->getData(l2, temp2);
+  x = temp1 < temp2 ? temp1 : temp2;
+  return;
+}
+
+/*
+  已知一个整数序列A=(a0,a1,...an-1),其中0<=ai<n(0<=i<n),若存在ap1=ap2=....=apm=x且m>n/2(0<=pk<n,1<=k<=m),则称x为A的主元素.
+  例如A=（0,5,5,3,5,7,5,5),则5为主元素;又如A=(0,5,5,3,5,1,3,5,7),则A中没有主元素.
+  假设A中的n个元素保存在一个一维数组中,请设计一个尽可能高效的算法,找出A的主元素.
+  若存在主元素,则输出该元素：否则输出-1.
+*/
+template<class T>
+void majority(SeqList<T> *seq, T &x) {
+  T temp,major;
+  int count, i;
+  count = 1;
+  seq->getData(0, major);
+  for (i = 1; i < seq->Length(); i++) {
+    seq->getData(i, temp);
+    if (temp == major) {
+      count++;
+    }
+    else {
+      if (count > 0) {
+        count--;
+      }
+      else {
+        seq->getData(i, major);
+        count = 1;
+      }
+    }
+  }
+  if (count > 0) {
+    for (i = count = 0; i < seq->Length(); i++) {
+      seq->getData(i, temp);
+      if (temp == major) {
+        count++;
+      }
+    }
+  }
+  if (count > (seq->Length()-1) / 2) {
+    x = major;
+  }
+  else {
+    x = -1;
+  }
+  return;
+}
+
+/*
+  给定一个含n(n>=1)个整数的数组,请设计一个在时间上可能高效的算法.
+  找出数组中未出现的最小整数,例如数组{-5,3,2,3}中未出现的最小整数是1;
+  数组1,2,3中未出现的最小整数是4.
+*/
+int findMissMin(SeqList<int> *seq) {
+  int temp;
+  int i;
+  int *a = new int[seq->Length() + 1];
+  for (i = 0; i < seq->Length(); i++) {
+    seq->getData(i, temp);
+    a[i] = 0;
+    if (temp > 0 && temp <= seq->Length()) {
+      a[temp - 1] = 1;
+    }
+  }
+  for (i = 0; i < seq->Length(); i++) {
+    if (a[i] == 0) {
+      break;
+    }
+  }
+  return i + 1;
+}
 #endif //SEQLIST_H_QUESTION
