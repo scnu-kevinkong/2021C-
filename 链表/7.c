@@ -13,7 +13,9 @@ void del_val_x_y(SingleLink<int> *&link,int x,int y) {
 			head->next = head->next->next;
 			delete del;
 		}
-		head = head->next;
+		else {
+			head = head->next;
+		}
 	}
 }
 int main()
