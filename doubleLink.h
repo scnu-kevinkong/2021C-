@@ -1,6 +1,3 @@
-#pragma once
-#pragma once
-#pragma once
 #ifndef DOUBLELINK_H_INCLUDED
 #define DOUBLELINK_H_INCLUDED
 #include<iostream>
@@ -12,9 +9,10 @@ struct Node {
 	T data;
 	Node<T> *next;
 	Node<T> *prev;
-	Node(T value) :data(value), next(NULL), prev(NULL) {}
-	Node(T value, Node<T>* link) : data(value), next(link), prev(NULL) {}
-	Node(T value, Node<T>* nlink, Node<T>* plink) : data(value), next(nlink), prev(plink) {}
+	int freq;
+	Node(T value) :data(value), next(NULL), prev(NULL),freq(0) {}
+	Node(T value, Node<T>* link) : data(value), next(link), prev(NULL), freq(0) {}
+	Node(T value, Node<T>* nlink, Node<T>* plink) : data(value), next(nlink), prev(plink), freq(0) {}
 };
 template<class T>
 class DoubleLink {
@@ -47,7 +45,18 @@ public:
 	void h_showout();
 	// 输出结果.不带头结点
 	void n_showout();
+	// 设为循环链表
+	void set_circle();
 };
+template<class T>
+void DoubleLink<T>::set_circle() {
+	Node<T> *temp = head;
+	while (temp->next != NULL) {
+		temp = temp->next;
+	}
+	temp->next = head;
+	head->prev = temp;
+}
 template<class T>
 int DoubleLink<T>::get_length_nh() {
 	Node<T>* temp = head;
